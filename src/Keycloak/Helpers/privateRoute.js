@@ -58,6 +58,35 @@ const PrivateRoute = ({ handleKeycloakRealmNameChange, children }) => {
 
   // };
 
+  async function test_data() {
+    const options = {
+      headers: {
+        Authorization: `Bearer ${getLocalStorage(`accessToken`)}`,
+        // Origin: process.env.REACT_APP_HOST,
+      },
+    };
+
+    const url_data = "http://localhost:8000/api/v1/contracts/";
+    await axios
+      .get(url_data, options)
+      .then(function (response) {
+        if (response.status >= 400) {
+          throw new Error("Bad response from server");
+        }
+
+        if (response.status == 200) {
+          // setUserId("user_id", response.data.user_id);
+          console.log("User Details****", response);
+        }
+        return response;
+        // return response.json();
+      })
+      .then(function (data) {})
+      .catch(function (err) {
+        console.log(err);
+      });
+  }
+
   async function get_Data() {
     // console.log(
     //   "logged Innnnnn +++++;;;;;;;;;;;;;;;;;;;;",
@@ -66,7 +95,7 @@ const PrivateRoute = ({ handleKeycloakRealmNameChange, children }) => {
     const options = {
       headers: {
         Authorization: `Bearer ${getLocalStorage(`accessToken`)}`,
-        Origin: process.env.REACT_APP_HOST,
+        // Origin: process.env.REACT_APP_HOST,
       },
     };
 
@@ -91,6 +120,7 @@ const PrivateRoute = ({ handleKeycloakRealmNameChange, children }) => {
         if (response.status == 200) {
           setUserId("user_id", response.data.user_id);
           console.log("User Details", response);
+          // test_data();
           // console.log(
           //   "sample *****logged Innnnnn +++++ goto user profile",
           //   response
@@ -123,7 +153,7 @@ const PrivateRoute = ({ handleKeycloakRealmNameChange, children }) => {
     const options = {
       headers: {
         Authorization: `Bearer ${getLocalStorage(`accessToken`)}`,
-        Origin: process.env.REACT_APP_HOST,
+        // Origin: process.env.REACT_APP_HOST,
       },
     };
     const url_data =

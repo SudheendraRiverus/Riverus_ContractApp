@@ -21,10 +21,18 @@ function* getUserUploads(action: GetUserUploads) {
   // console.log("User Uploads");
   try {
     let response = yield call(FileUploadAPI.getUserUploads, url);
-    // console.log("User Uploads *****************", response);
+    console.log(
+      "🚀 ~ file: historySaga.tsx ~ line 24 ~ Contract List",
+      response
+    );
     switch (response.status) {
       case 200: {
-        let parsed = response.data.queryResult as FileInfo[];
+        // let parsed = response.data.queryResult as FileInfo[];
+        let parsed = response.data as FileInfo[];
+        console.log(
+          "🚀 ~ file: historySaga.tsx ~ line 24 ~ getUserUploads LIST",
+          parsed
+        );
         yield put(HistoryActionGenerator.getUserUploadsSuccess(parsed));
         break;
       }

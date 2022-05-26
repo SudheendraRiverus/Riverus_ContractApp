@@ -16,7 +16,7 @@ export default function QuickLook(props: Props) {
     <div className="row">
       <div className="col-md-3">
         <QuickLookCard
-          title={fileInfo.length.toString()}
+          title="2"
           subTitle={"totalUploads"}
           selectedFilter={selectedFilter}
           selectFilter={selectFilter}
@@ -31,7 +31,7 @@ export default function QuickLook(props: Props) {
             </div> */}
       <div className="col-md-3">
         <QuickLookCard
-          title={getUploadSize(fileInfo).toString()}
+          title="2048"
           subTitle={"uploadSize"}
           selectedFilter={selectedFilter}
           selectFilter={selectFilter}
