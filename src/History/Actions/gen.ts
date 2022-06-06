@@ -1,10 +1,8 @@
 import {
   GetUserUploadsSuccess,
-  GetUserUploadsSuccessNew,
   GETUSERUPLOADS,
   GetUserUploads,
   GETUSERUPLOADS_SUCCESS,
-  GETUSERUPLOADS_SUCCESSNEW,
   GetUserUploadsFailure,
   GETUSERUPLOADS_FAILURE,
   ChangeStatus,
@@ -20,11 +18,7 @@ import {
   SAVEDELETEDETAILS,
   SaveDeleteDetails,
 } from "./def";
-import {
-  StatusPoints,
-  FileInfo,
-  FileList,
-} from "../../Upload/State/uploadState";
+import { StatusPoints, FileInfo } from "../../Upload/State/uploadState";
 
 export default class HistoryActionGenerator {
   public static getUserUploads(): GetUserUploads {
@@ -42,18 +36,6 @@ export default class HistoryActionGenerator {
       },
     };
   }
-
-  public static getUserUploadsSuccessNew(
-    userUploads: FileList[]
-  ): GetUserUploadsSuccessNew {
-    return {
-      type: GETUSERUPLOADS_SUCCESSNEW,
-      payload: {
-        userUploads: userUploads,
-      },
-    };
-  }
-
   public static getUserUploadsFailure(): GetUserUploadsFailure {
     return {
       type: GETUSERUPLOADS_FAILURE,
@@ -74,7 +56,7 @@ export default class HistoryActionGenerator {
       },
     };
   }
-  public static deleteFile(uniqueFileId: string): DeleteFile {
+  public static deleteFile(uniqueFileId: number): DeleteFile {
     return {
       type: DELETEFILE,
       payload: {
@@ -100,7 +82,7 @@ export default class HistoryActionGenerator {
   }
   public static saveDeleteDetails(
     documentName: string,
-    uniqueFileId: string
+    uniqueFileId: number
   ): SaveDeleteDetails {
     return {
       type: SAVEDELETEDETAILS,

@@ -11,15 +11,13 @@ import FileUploadAPI from "../Actions/API";
 import { call, put, takeLatest, all, takeEvery } from "redux-saga/effects";
 import socketIOClient from "socket.io-client";
 import { store } from "../..";
-import { FileInfo, FileList } from "../../Upload/State/uploadState";
+import { FileInfo } from "../../Upload/State/uploadState";
 import HistoryActionGenerator from "../Actions/gen";
 import { getKeyCloakRealmFromLS } from "../../Authentication/Actions/authentication";
 const SITEAPI = SITE_API_BY_REALM_NAME(getKeyCloakRealmFromLS());
 function* getUserUploads(action: GetUserUploads) {
   //let url = SITEAPI + "useruploads";
   let url = SITEAPI; //"http://localhost:8000/api/v1/contracts/";
-  // let url = "http://localhost:6064/contracts"; //"http://localhost:6064/useruploads/";
-
   // console.log("User Uploads");
   try {
     let response = yield call(FileUploadAPI.getUserUploads, url);
@@ -30,13 +28,12 @@ function* getUserUploads(action: GetUserUploads) {
     switch (response.status) {
       case 200: {
         // let parsed = response.data.queryResult as FileInfo[];
-
-        let parsed = response.data.results as FileList[];
+        let parsed = response.data as FileInfo[];
         console.log(
           "🚀 ~ file: historySaga.tsx ~ line 24 ~ getUserUploads LIST",
           parsed
         );
-        yield put(HistoryActionGenerator.getUserUploadsSuccessNew(parsed));
+        yield put(HistoryActionGenerator.getUserUploadsSuccess(parsed));
         break;
       }
       default: {
@@ -50,26 +47,12 @@ function* getUserUploads(action: GetUserUploads) {
 
 function* deleteFile(action: DeleteFile) {
   let fileId = action.payload.uniqueFileId;
-  // let url = SITEAPI + "delete/" + fileId;
-  let url = SITEAPI + "" + fileId + "/";
-  console.log("🚀 ~ file: historySaga.ts ~ line 24 ~ deleteFile", url);
+  let url = SITEAPI + "delete/" + fileId;
   try {
     let response = yield call(FileUploadAPI.deleteFile, url);
-    console.log(
-      "🚀 ~ file: historySaga.ts ~ line 24 ~ deleteFile Response",
-      response
-    );
-    // let parsed = response.data.queryResult;
-    let parsed = response.data;
-    if (parsed == "") {
-      parsed = 1;
-    }
+    let parsed = response.data.queryResult;
     switch (response.status) {
       case 200: {
-        yield put(HistoryActionGenerator.deleteFileSuccess(parsed));
-        break;
-      }
-      case 204: {
         yield put(HistoryActionGenerator.deleteFileSuccess(parsed));
         break;
       }
