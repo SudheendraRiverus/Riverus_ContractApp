@@ -4,27 +4,44 @@ import Scrollable from "../../UniversalComponents/Scrollable/scrollable";
 import BarLoader from "../../UniversalComponents/Loader/barLoader";
 import SideNavbar from "../../UniversalComponents/SideNavbar/Container/sideNavBarCon";
 import UploadHeader from "../../Upload/Component/uploadHeader";
-import { FileInfo } from "../../Upload/State/uploadState";
+import { FileInfo, FileList } from "../../Upload/State/uploadState";
 import FileListComponent from "../../Upload/Component/fileListComponent";
 import QuickLook from "../../Upload/Component/quickLook";
 import { DONE } from "../../Constants/const";
 
-// console.log("historyContainer");
+//------------------
+import { SITE_API_BY_REALM_NAME, HOST } from "../../Configuration/global";
+import Tooltip from "@material-ui/core/Tooltip";
+import {
+  getKeyCloakRealmFromLS,
+  getLocalStorage,
+} from "../../Authentication/Actions/authentication";
+import axios from "axios";
+const SITEAPI = SITE_API_BY_REALM_NAME(getKeyCloakRealmFromLS());
+//-----
+
+let url = SITEAPI;
+const options = {
+  headers: {
+    Authorization: `Bearer ${getLocalStorage(`accessToken`)}`,
+    Origin: process.env.REACT_APP_HOST,
+  },
+};
 
 interface Props {
   pageWatcher: (page: string) => void;
   getUserUploads: () => void;
   changeStatus: () => void;
   userName: string;
-  userUploads: FileInfo[];
+  userUploads: FileList[];
   historyLoader: boolean;
   history: History;
-  saveDeleteDetails: (documentName: string, uniqueFileId: number) => void;
+  saveDeleteDetails: (documentName: string, uniqueFileId: string) => void;
 }
 
 interface State {
   selectedFilter: string;
-  uploadsArray: FileInfo[];
+  uploadsArray: FileList[];
 }
 
 export default class HistoryContainer extends Component<Props, State> {
@@ -39,7 +56,7 @@ export default class HistoryContainer extends Component<Props, State> {
   selectFilter = (filter: string) => {
     let { selectedFilter } = this.state;
     let { userUploads } = this.props;
-    if (selectedFilter !== filter) {
+    /* if (selectedFilter !== filter) {
       this.setState({ selectedFilter: filter });
       switch (filter) {
         case "totalUploads": {
@@ -66,11 +83,12 @@ export default class HistoryContainer extends Component<Props, State> {
       }
     } else {
       this.setState({ selectedFilter: filter });
-    }
+    }*/
   };
 
   componentDidMount() {
     let { getUserUploads, pageWatcher, changeStatus } = this.props;
+    console.log("🚀 ~ file: historyContainer.tsx");
     getUserUploads();
     pageWatcher("uploads");
     changeStatus();
@@ -85,56 +103,63 @@ export default class HistoryContainer extends Component<Props, State> {
   switchRender() {
     let { historyLoader, history, saveDeleteDetails } = this.props;
     let { uploadsArray } = this.state;
-    // console.log("Upload Array", uploadsArray);
-    // if (historyLoader) {
-    //   return <BarLoader />;
-    // } else {
-    return (
-      <>
-        {uploadsArray.length > 0 && (
-          <div className="row">
-            <div className="col-md-12 mt-2 mb-4">
-              <UploadHeader />
-            </div>
-          </div>
-        )}
-        {uploadsArray.length > 0 && (
-          <>
-            <div className="row">
-              <div className="col-md-12 upload-list-container">
-                <Scrollable maxHeight={370} minHeight={"50vh"}>
-                  {uploadsArray.map((file, i) => (
-                    <React.Fragment key={i}>
-                      <FileListComponent
-                        file={file}
-                        history={history}
-                        from={"uploads"}
-                        saveDeleteDetails={saveDeleteDetails}
-                      />
-                    </React.Fragment>
-                  ))}
-                </Scrollable>
-              </div>
-            </div>
-          </>
-        )}
-        {uploadsArray.length === 0 && (
-          <div className="row">
-            <div className="col-md-12 text-center mt-5">
-              <div className="tagline">
-                Digitize your contracts and get instant insights!
-              </div>
-              <img
-                className="cursor-pointer"
-                src="/static_images/go-back-upload-img.svg"
-                onClick={() => (window.location.href = "/addfiles")}
-              />
-            </div>
-          </div>
-        )}
-      </>
+
+    console.log(
+      "🚀 ~ file: historySaga.tsx ~ line 24 ~ Contract List",
+
+      uploadsArray.length
     );
-    // }
+
+    if (historyLoader) {
+      return <BarLoader />;
+    } else {
+      return (
+        <>
+          {uploadsArray.length > 0 && (
+            <div className="row">
+              <div className="col-md-12 mt-2 mb-4">
+                <UploadHeader />
+              </div>
+            </div>
+          )}
+
+          {uploadsArray.length > 0 && (
+            <>
+              <div className="row">
+                <div className="col-md-12 upload-list-container">
+                  <Scrollable maxHeight={370} minHeight={"50vh"}>
+                    {uploadsArray.map((file, i) => (
+                      <React.Fragment key={i}>
+                        <FileListComponent
+                          file={file}
+                          history={history}
+                          from={"uploads"}
+                          saveDeleteDetails={saveDeleteDetails}
+                        />
+                      </React.Fragment>
+                    ))}
+                  </Scrollable>
+                </div>
+              </div>
+            </>
+          )}
+          {uploadsArray.length === 0 && (
+            <div className="row">
+              <div className="col-md-12 text-center mt-5">
+                <div className="tagline">
+                  Digitize your contracts and get instant insights!
+                </div>
+                <img
+                  className="cursor-pointer"
+                  src="/static_images/go-back-upload-img.svg"
+                  onClick={() => (window.location.href = "/addfiles")}
+                />
+              </div>
+            </div>
+          )}
+        </>
+      );
+    }
   }
   render() {
     let { userUploads, history } = this.props;

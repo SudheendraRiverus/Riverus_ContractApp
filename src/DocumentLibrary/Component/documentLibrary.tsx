@@ -352,13 +352,6 @@ export default class DocumentLibrary extends React.Component<Props, State> {
         <div className="col-md-11 mt-5" style={{ zIndex: 1 }}>
           {documentLibraryLoader ? (
             <>
-              <div>Hiiii12456</div>
-              <div>
-                4444444{getLibraryTags}-----****{documentLibraryLoader}* **
-                {libraryTags}** {}*---
-                {documentHierarchy.length}++++====={applyLibraryTagFilters}
-                {}
-              </div>
               <BarLoader />
             </>
           ) : (
