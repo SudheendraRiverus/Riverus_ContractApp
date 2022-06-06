@@ -12,7 +12,7 @@ export default class FileUploadAPI {
       });
   }
   public static deleteFile(url: string) {
-    return AxiosGateWay.deleteFile(url)
+    return AxiosGateWay.get(url)
       .then((result) => {
         return result;
       })
